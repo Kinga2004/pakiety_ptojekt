@@ -45,42 +45,41 @@ y=df['label']
 print(X.shape)
 print(y.shape)
 
-#poniżej jest python
+using TextAnalysis
+using Pkg
 
-#Downloading stopwords 
-#Stopwords are the words in any language which does not add much meaning to a sentence.
-#They can safely be ignored without sacrificing the meaning of the sentence.
-import nltk
-import re
-from nltk.corpus import stopwords
-nltk.download('stopwords')
+# Pkg.add("PyCall")
+# using Pkg
+# Pkg.add("Conda")
+# using Conda
+# Conda.add("nltk")
 
-#We will be using Stemming here
-#Stemming map words to their root forms
-from nltk.stem.porter import PorterStemmer
-ps = PorterStemmer()
+using PyCall
+@pyimport nltk
+nltk.download("stopwords")
+
+stop_words = nltk.corpus.stopwords.words("english")
+
+stemmer = nltk.stem.PorterStemmer()
+
 corpus = []
 
+for document in eachrow(msg)
+    text = lowercase(replace(document.total, r"\W" => " "))
+    words = split(text)
+    stemmed_words = [stemmer.stem(word) for word in words if !(word in stop_words)]
+    push!(corpus,stemmed_words)
+end
 
-#Applying stemming and some preprocessing
-for i in range(len(msg)):
-  review = re.sub('[^a-zA-Z]',' ',msg['total'][i])
-  review = review.lower()
-  review = review.split()
-  review = [ps.stem(word) for word in review if not word in stopwords.words('english')]
-  review = ' '.join(review)
-  corpus.append(review)
-
-  #Applying stemming and some preprocessing for test data
 corpus_test = []
-for i in range(len(msg_test)):
-  review = re.sub('[^a-zA-Z]',' ',msg_test['total'][i])
-  review = review.lower()
-  review = review.split()
-  review = [ps.stem(word) for word in review if not word in stopwords.words('english')]
-  review = ' '.join(review)
-  corpus_test.append(review)
+for document in eachrow(msg_test)
+    text = lowercase(replace(document.total, r"\W" => " "))
+    words = split(text)
+    stemmed_words = [stemmer.stem(word) for word in words if !(word in stop_words)]
+    push!(corpus_test, stemmed_words)
+end
 
+#poniżej jest python
 
 # Converting to one hot representation
 onehot_rep = [one_hot(words,voc_size)for words in corpus]
