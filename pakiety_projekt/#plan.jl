@@ -22,31 +22,30 @@ Sequential = pyimport("Sequential")
 tkpt = pyimpory("tensorflow.keras.preprocessing.text")
 one_hot = pyimport("one_hot")
 
-df = pd.read_csv('../input/fake-news/train.csv')
-test = pd.read_csv('../input/fake-news/test.csv')
+using CSV
+using DataFrames
 
-df.head()
+df = CSV.read("C:/Users/admmass/Desktop/test.csv", DataFrame)
+test = CSV.read("C:/Users/admmass/Desktop/test.csv", DataFrame)
 
-#filling NULL values with empty string
-df=df.fillna('')
-test=test.fillna('')
+df = coalesce.(df, "")
+test = coalesce.(test, "")
 
-# We will be only using title and author name for prediction
-# Creating new coolumn total concatenating title and author
-df['total'] = df['title']+' '+df['author']
-test['total']=test['title']+' '+test['author']
+df.total = string.(df.title, " ", df.author)
+test.total = string.(test.title, " ", test.author)
 
+X = select!(df, Not(:id))
+# y = df.id
 
-X = df.drop('label',axis=1)
+voc_size = 5000
+msg = copy(X)
+msg_test = copy(test)
+
 y=df['label']
 print(X.shape)
 print(y.shape)
 
-#Choosing vocabulary size to be 5000 and copying data to msg for further cleaning
-voc_size = 5000
-msg = X.copy()
-msg_test = test.copy()
-
+#poniżej jest python
 
 #Downloading stopwords 
 #Stopwords are the words in any language which does not add much meaning to a sentence.
